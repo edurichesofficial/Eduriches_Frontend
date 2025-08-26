@@ -301,7 +301,7 @@ animate={{
               ))}
 
               <div className={`flex justify-between items-center px-4 py-4 rounded-2xl bg-[#F4FAFF] cursor-pointer`}
-                onClick={() => { navigate('/'); setMobileOpen(false);}}>
+                onClick={() => { navigate('/AboutUs'); setMobileOpen(false);}}>
                 <span className="text-lg font-semibold">About us</span>
               </div>
                 <div
