@@ -9,7 +9,7 @@ import Branding from '../assets/Basic converted/Basic converted/Web development.
 
 
 import Graphics from '../assets/Standard converted/Standard converted/Graphics design.avif';
-import DataScience from '../assets/Standard converted/Standard converted/Data Science.avif';
+import DataScience from '../assets/Standard converted/Standard converted/Data science.avif';
 import PublicSpeaking from '../assets/Standard converted/Standard converted/Public speaking.avif';
 import CreativeWriting from '../assets/Standard converted/Standard converted/Creative writting.avif';
 import ResumeBuilding from '../assets/Standard converted/Standard converted/Resume building.avif';
