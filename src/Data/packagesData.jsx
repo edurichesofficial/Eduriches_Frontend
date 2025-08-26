@@ -27,7 +27,7 @@ import Entrepreneurship from '../assets/Premium converted/Premium converted/Entr
 import ARVR from '../assets/Premium converted/Premium converted/AR and VR.avif';
 import CreativeCoding from '../assets/Premium converted/Premium converted/Creative coding.avif';
 import GameDesign from '../assets/Premium converted/Premium converted/Game design.avif';
-import PersonalBranding from '../assets/Premium converted/Premium converted/Personal branding.avif';
+import PersonalBranding from '../assets/Premium converted/Premium converted/personal branding.avif';
 const packagesData = {
   advanced: {
     packageName: "Advanced Package...",

@@ -31,7 +31,7 @@ const Section2 = ({ courses = [] }) => {
   return (
     <div className="mt-12 px-4 font-outfit">
       <h1 className="text-4xl font-semibold text-center bg-gradient-to-r from-[#5E4BDA] to-[#2C71A1] text-transparent bg-clip-text">
-        Basic Plan – Foundations for Future Learning
+         Foundations for Future Learning
       </h1>
       <p className="text-sm text-center text-[#797979] mb-8">
         ✨ Start small, dream big — the skills you master here open doors to every advanced path ahead.

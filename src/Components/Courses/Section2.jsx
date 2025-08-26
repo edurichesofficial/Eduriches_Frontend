@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import courseImage from '../../assets/courses.svg';
-import upgrade from '../../assets/upgrade.svg';
-import instructor from '../../assets/instructor.svg';
+import instructorIcon from '../../assets/instructor.svg';
 import timing_icon from '../../assets/timing_icon.svg';
 import Class_icon from '../../assets/Class_icon.svg';
+import upgrade from '../../assets/upgrade.svg';
+
+// ⬇️ import your big object
+import packagesData from '../../Data/packagesData'; // <-- update this
 
 const container = {
   hidden: {},
@@ -25,41 +27,103 @@ const card = {
   },
 };
 
-const Section2 = () => {
-  const courses = [
-    {
-      title: 'Learn UI Design with Figma',
-      instructor: 'Divya N.',
-      duration: '6 hours 12 mins',
-      lessons: 15,
-      imageUrl: courseImage,
-      buttonText: 'Upgrade Path to unlock',
-    },
-    {
-      title: 'Advanced UI Design with Figma',
-      instructor: 'John Doe',
-      duration: '5 hours 30 mins',
-      lessons: 20,
-      imageUrl: courseImage,
-      buttonText: 'Watch',
-    },
-    {
-      title: 'UI Design for Beginners',
-      instructor: 'Jane Smith',
-      duration: '3 hours 15 mins',
-      lessons: 10,
-      imageUrl: courseImage,
-      buttonText: 'Watch',
-    },
-    {
-      title: 'UX/UI Fundamentals',
-      instructor: 'Chris T.',
-      duration: '4 hours 45 mins',
-      lessons: 18,
-      imageUrl: courseImage,
-      buttonText: 'Watch',
-    },
-  ];
+// top of file
+const PAGE_SIZE = 8;
+const INITIAL_LOAD = 8;
+const MAX_ITEMS = 8; // <-- new
+
+
+function normalizeLessons(modules) {
+  if (typeof modules === 'number') return modules;
+  const m = String(modules).match(/\d+/);
+  return m ? parseInt(m[0], 10) : 0;
+}
+
+function Section2() {
+  // 1) Flatten all package courses
+// 1) Flatten all package courses (hard-cap to 8)
+const flattenedCourses = useMemo(() => {
+  const list = [];
+  Object.values(packagesData).forEach((pkg) => {
+    (pkg?.courses || []).forEach((c) => {
+      list.push({
+        title: c.title,
+        instructor: c.tutor,
+        duration: c.hours,
+        lessons: normalizeLessons(c.modules),
+        imageUrl: c.imageUrl,
+        locked: false,
+      });
+    });
+  });
+  // Optional stable sort
+  // list.sort((a, b) => a.title.localeCompare(b.title));
+
+  return list.slice(0, MAX_ITEMS); // <-- only take 8
+}, []);
+
+
+  // 2) Infinite loading state
+  const [visibleCount, setVisibleCount] = useState(
+    Math.min(INITIAL_LOAD, flattenedCourses.length)
+  );
+  const sentinelRef = useRef(null);
+
+  const hasMore = visibleCount < flattenedCourses.length;
+  const visibleCourses = useMemo(
+    () => flattenedCourses.slice(0, visibleCount),
+    [flattenedCourses, visibleCount]
+  );
+
+  // 3) IntersectionObserver to load more
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setVisibleCount((prev) =>
+            Math.min(prev + PAGE_SIZE, flattenedCourses.length)
+          );
+        }
+      },
+      { root: null, rootMargin: '200px 0px', threshold: 0 }
+    );
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, [flattenedCourses.length]);
+
+  // Keep visibleCount sane if data size changes
+  useEffect(() => {
+    setVisibleCount((prev) =>
+      Math.min(Math.max(prev, INITIAL_LOAD), flattenedCourses.length)
+    );
+  }, [flattenedCourses.length]);
+
+
+  
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [popupMsg, setPopupMsg] = useState("Launching soon — stay tuned!");
+
+  const onWatchClick = (e, course) => {
+    e.preventDefault();
+    setPopupMsg(`"${course.title}" is launching soon — stay tuned!`);
+    setPopupOpen(true);
+
+    // auto-close
+    window.clearTimeout(onWatchClick._t);
+    onWatchClick._t = window.setTimeout(() => setPopupOpen(false), 2500);
+  };
+
+  // close on ESC
+  useEffect(() => {
+    const onKey = (ev) => ev.key === "Escape" && setPopupOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
     <div className="mt-8 px-4 font-outfit">
@@ -70,11 +134,11 @@ const Section2 = () => {
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
       >
-        {courses.map((course, index) => {
-          const isLocked = course.buttonText === 'Upgrade Path to unlock';
+        {visibleCourses.map((course, index) => {
+          const isLocked = !!course.locked;
           return (
             <motion.div
-              key={index}
+              key={`${course.title}-${index}`}
               variants={card}
               whileHover={{ y: -4 }}
               className="w-full flex flex-col border border-gray-300 rounded-3xl overflow-hidden bg-white shadow-lg relative"
@@ -90,11 +154,11 @@ const Section2 = () => {
                   src={course.imageUrl}
                   alt={course.title}
                   className="object-cover w-full h-full"
+                  loading="lazy"
+                  decoding="async"
                   whileHover={{ scale: 1.04 }}
                   transition={{ type: 'spring', stiffness: 120, damping: 15 }}
                 />
-
-                {/* Lock overlay */}
                 {isLocked && (
                   <>
                     <motion.div
@@ -118,7 +182,9 @@ const Section2 = () => {
               {/* Body */}
               <div className="flex flex-col flex-grow bg-white p-4">
                 <div className="flex-1">
-                  <h3 className="font-semibold text-lg md:text-xl truncate">{course.title}</h3>
+                  <h3 className="font-semibold text-lg md:text-xl line-clamp-2">
+                    {course.title}
+                  </h3>
 
                   <div className="flex flex-wrap gap-2">
                     <div className="flex items-center px-2 py-1.5 mt-3 rounded-full border border-[#D7D7D7] w-fit gap-2">
@@ -127,7 +193,9 @@ const Section2 = () => {
                     </div>
                     <div className="flex items-center px-2 py-1.5 mt-3 rounded-full border border-[#D7D7D7] w-fit gap-2">
                       <img src={Class_icon} className="w-5" alt="lessons" />
-                      <p className="text-[12px] font-medium text-gray-500">{course.lessons} Lessons</p>
+                      <p className="text-[12px] font-medium text-gray-500">
+                        {course.lessons} Lessons
+                      </p>
                     </div>
                   </div>
 
@@ -138,7 +206,11 @@ const Section2 = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.35 }}
                   >
-                    <img src={instructor} alt={course.instructor} className="w-10 h-10 rounded-full" />
+                    <img
+                      src={instructorIcon}
+                      alt={course.instructor}
+                      className="w-10 h-10 rounded-full"
+                    />
                     <div>
                       <p className="text-sm text-[#A8A8A8]">Instructor</p>
                       <p className="text-[18px] text-[#000] ">{course.instructor}</p>
@@ -146,33 +218,78 @@ const Section2 = () => {
                   </motion.div>
                 </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`w-full py-3 rounded-xl text-sm sm:text-base ${
-                    isLocked ? 'bg-[#F4FAFF] text-[#0162D9]' : 'bg-[#0162D9] text-white'
-                  }`}
-                >
-                  {course.buttonText}
-                </motion.button>
+<motion.button
+  whileHover={{ scale: 1.02 }}
+  whileTap={{ scale: 0.98 }}
+  className={`w-full py-3 rounded-xl text-sm sm:text-base ${
+    isLocked ? 'bg-[#F4FAFF] text-[#0162D9]' : 'bg-[#0162D9] text-white'
+  }`}
+  onClick={(e) => onWatchClick(e, course)}
+>
+  {isLocked ? 'Upgrade Path to unlock' : 'Watch'}
+</motion.button>
+
               </div>
             </motion.div>
           );
         })}
       </motion.div>
 
-      {/* View more CTA */}
-      <div className="flex py-10 justify-center mt-6">
-        <motion.button
-          whileHover={{ y: -2, scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          className="bg-[#0183FF] py-3 flex items-center justify-center hover:scale-105 cursor-pointer px-8 text-[18px] rounded-xl text-white transition duration-300 ease-in-out"
-        >
-          <span>View more</span>
-        </motion.button>
-      </div>
+      {/* Infinite-scroll sentinel + loader */}
+      <div ref={sentinelRef} className="h-10 w-full" />
+
+{popupOpen && (
+  <motion.div
+    className="fixed inset-0 z-[100] flex items-center justify-center"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    aria-live="polite"
+  >
+    {/* Backdrop */}
+    <div
+      className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      onClick={() => setPopupOpen(false)}
+    />
+
+    {/* Popup card */}
+    <motion.div
+      role="dialog"
+      aria-modal="true"
+      className="relative mx-4 w-full max-w-md rounded-2xl bg-white shadow-2xl border border-gray-200 p-6 text-center"
+      initial={{ scale: 0.9, y: 12, opacity: 0 }}
+      animate={{ scale: 1, y: 0, opacity: 1, transition: { type: 'spring', stiffness: 220, damping: 18 } }}
+    >
+      <div className="text-base font-semibold">Launching soon</div>
+      <div className="mt-2 text-sm text-gray-600">{popupMsg}</div>
+
+      <motion.div
+        className="mx-auto mt-4 h-1.5 w-24 rounded-full bg-gray-200 overflow-hidden"
+        initial={{}}
+        animate={{}}
+      >
+        <motion.div
+          className="h-full w-24 bg-gray-400"
+          initial={{ x: -96 }}
+          animate={{ x: 0 }}
+          transition={{ duration: 2.3, ease: 'easeOut' }}
+        />
+      </motion.div>
+
+      <button
+        onClick={() => setPopupOpen(false)}
+        className="mt-5 inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium border border-gray-300 hover:bg-gray-50"
+      >
+        Okay
+      </button>
+    </motion.div>
+  </motion.div>
+)}
+
+
+    
     </div>
   );
-};
+}
 
 export default Section2;

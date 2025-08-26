@@ -177,7 +177,7 @@ animate={{
 
           {/* Right Buttons */}
           <div className="w-full max-w-[320px] items-center justify-end hidden lg:flex">
-            <div className="flex items-center gap-3">
+            {/* <div className="flex items-center gap-3">
               <Link to="/login" className={`text-[16px] font-outfit hover:bg-white hover:text-black px-8 border border-[#a8a8a8] py-2.5 rounded-xl ${scrolled || isDarkMode?'text-black':'text-white'}`}>
                 Login
               </Link>
@@ -185,7 +185,7 @@ animate={{
                 <span>Register</span>
               </Link>
 
-            </div>
+            </div> */}
           </div>
 
           {/* Mobile Hamburger Icon */}
@@ -316,7 +316,7 @@ animate={{
 
               {/* Buttons at Bottom */}
               <div className="mt-6 flex flex-row gap-1.5">
-                <button
+                {/* <button
                   onClick={() => {
                     navigate('/login');
                     window.scrollTo(0, 0);
@@ -333,7 +333,7 @@ animate={{
                   
                   className={`${ scrolled || isDarkMode ? 'bg-[#0183FF]' : 'bg-[#0183FF]'}  flex-1 text-xl py-3.5 font-outfit text-[#fff] hover:bg-white hover:text-black px-8 border border-[#a8a8a8] rounded-xl `}>
                   <span>Register</span>
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
