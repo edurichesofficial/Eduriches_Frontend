@@ -2,6 +2,13 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Users, Target, Rocket } from "lucide-react";
 
+import image_1 from '../assets/Adout_us_image_1.jpeg'
+import image_2 from '../assets/Adout_us_image_2.jpeg'
+import image_3 from '../assets/Adout_us_image_3.jpeg'
+import image_4 from '../assets/Adout_us_image_4.jpeg'
+
+import Footer from "../Components/Footer";
+
 const AboutUs = () => {
     const fadeIn = {
         initial: { opacity: 0, y: 20 },
@@ -10,6 +17,7 @@ const AboutUs = () => {
     };
 
     return (
+        <>
         <div className="min-h-screen cursor-default bg-[#002B54]">
             {/* Hero Section */}
             <div className="relative bg-gradient-to-r from-[#002B54] to-[#003E7F]">
@@ -48,7 +56,7 @@ const AboutUs = () => {
                         transition={{ delay: 0.3, duration: 0.6 }}
                     >
                         <img
-                            src="/images/BothImages.webp"
+                            src={image_3}
                             alt="Founders"
                             className="rounded-2xl shadow-2xl mx-auto"
                             loading="lazy"
@@ -87,17 +95,17 @@ const AboutUs = () => {
                         transition={fadeIn.transition}
                     >
                         <img
-                            src="/images/CEOimage.webp"
-                            alt="Karthik "
+                            src={image_1}
+                            alt=" "
                             className="rounded-xl mb-6"
                             loading="lazy"
                         />
                         <h3 className="text-2xl font-bold text-white mb-1">
-                            Karthik 
+                            Arjun Mehta 
                         </h3>
                         <p className="text-white font-medium mb-4">Founder & CEO</p>
                         <p className="text-gray-300 text-justify leading-relaxed text-sm">
-                            Karthik is the visionary Founder & CEO behind DIGI LANCING.
+                            Arjun Mehta is the visionary Founder & CEO behind DIGI LANCING.
                             With years of experience at IBM and expertise in Learning Management
                             Systems, he saw the gap between education and employability.
                             His mission is to shift education from theory to execution,
@@ -113,15 +121,15 @@ const AboutUs = () => {
                         transition={{ delay: 0.2, duration: 0.6 }}
                     >
                         <img
-                            src="/images/CEOimage2.webp"
+                            src={image_2}
                             alt="Pavan"
                             className="rounded-xl mb-6"
                             loading="lazy"
                         />
-                        <h3 className="text-2xl font-bold text-white mb-1">Pavan</h3>
+                        <h3 className="text-2xl font-bold text-white mb-1">Rohan Kapoor</h3>
                         <p className="text-white font-medium mb-4">Co-Founder</p>
                         <p className="text-gray-300 text-justify leading-relaxed text-sm">
-                            Pavan, with a background at IDBI Bank, brings financial expertise,
+                            Rohan Kapoor, with a background at IDBI Bank, brings financial expertise,
                             sales acumen, and administration to DIGI LANCING.
                             She believes education should not end with information,
                             but begin with action — skills that generate sustainable income.
@@ -140,17 +148,17 @@ const AboutUs = () => {
                     <div className="grid md:grid-cols-3 gap-10">
                         {[
                             {
-                                icon: <Users className="w-10 h-10 text-[#002B54] mx-auto mb-4" />,
+                                icon: <Users className="w-10 h-10 text-[#ffffff] mx-auto mb-4" />,
                                 title: "Direct Mentorship",
                                 desc: "Learn from professionals who live what they teach, delivering insider knowledge you can apply instantly.",
                             },
                             {
-                                icon: <Target className="w-10 h-10 text-[#002B54] mx-auto mb-4" />,
+                                icon: <Target className="w-10 h-10 text-[#ffffff] mx-auto mb-4" />,
                                 title: "Life-Changing Skills",
                                 desc: "Beyond technical knowledge — we prepare you with communication, freelancing, mindset, and entrepreneurship.",
                             },
                             {
-                                icon: <Rocket className="w-10 h-10 text-[#002B54] mx-auto mb-4" />,
+                                icon: <Rocket className="w-10 h-10 text-[#ffffff] mx-auto mb-4" />,
                                 title: "Support That Stays",
                                 desc: "From quick resolutions to multilingual care — every student and affiliate is a priority, not a number.",
                             },
@@ -171,45 +179,10 @@ const AboutUs = () => {
             </div>
 
             {/* Offline Events Timeline */}
-            <div className="max-w-7xl mx-auto px-6 lg:px-12 py-24">
-                <h2 className="text-4xl font-bold text-center text-white mb-12">
-                    Offline Events <span className="text-[#002B54]">& Community</span>
-                </h2>
-                <div className="relative border-l border-gray-600 ml-6">
-                    {[
-                        {
-                            year: "2023",
-                            title: "Expert Summits",
-                            desc: "Hosted in-person expert summits bringing together learners, mentors, and industry leaders.",
-                        },
-                        {
-                            year: "2024",
-                            title: "Skill Bootcamps",
-                            desc: "Launched skill bootcamps for complete beginners with structured real-world training.",
-                        },
-                        {
-                            year: "2025",
-                            title: "Global Meetups",
-                            desc: "Expanding our community meetups to connect learners across the globe.",
-                        },
-                    ].map((event, i) => (
-                        <motion.div
-                            key={i}
-                            className="mb-12 ml-6"
-                            initial={fadeIn.initial}
-                            animate={fadeIn.animate}
-                            transition={{ delay: i * 0.2 }}
-                        >
-                            <div className="absolute -left-3 w-6 h-6 bg-[#002B54] rounded-full border-2 border-white"></div>
-                            <h3 className="text-2xl font-semibold text-white mb-1">
-                                {event.year} — {event.title}
-                            </h3>
-                            <p className="text-gray-300 text-sm">{event.desc}</p>
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
+           
         </div>
+        <Footer/>
+        </>
     );
 };
 

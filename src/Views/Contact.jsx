@@ -12,14 +12,17 @@ const fadeUp = {
   }),
 };
 
+const ACCESS_KEY = "97089d31-5a4c-4e20-8d4f-5e654bf29d64";
+
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
   const [copied, setCopied] = useState({ email: false, phone: false });
 
-  const emailAddr = "hello@Edulancer.com";
-  const phoneNum = "+1234 567 78";
+  const emailAddr = "Digilancing47@gmail.com";
+  const phoneNum = "+91 80081 09303";
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -29,12 +32,43 @@ const Contact = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
+
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 900));
-    setLoading(false);
-    setSent(true);
-    setForm({ name: "", email: "", message: "" });
-    setTimeout(() => setSent(false), 3500);
+    setError("");
+
+    const payload = {
+      access_key: ACCESS_KEY,
+      // Use the same casing as your reference (Web3Forms accepts arbitrary fields)
+      Name: form.name,
+      Email: form.email,
+      Message: form.message,
+      Subject: "Digilancing – Contact Form",
+      // helpful extras (optional for Web3Forms)
+      from_name: "Digilancing Website",
+      replyto: form.email,
+    };
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await res.json();
+
+      if (result?.success) {
+        setSent(true);
+        setForm({ name: "", email: "", message: "" });
+        // auto-hide after a bit
+        setTimeout(() => setSent(false), 3500);
+      } else {
+        setError(result?.message || "Failed to send message. Please try again.");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const copyToClipboard = async (text, key) => {
@@ -46,7 +80,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="relative min-h-screen  bg-[#021E3A] text-white flex items-center justify-center px-6 py-24 sm:py-28 cursor-default overflow-hidden">
+    <div className="relative min-h-screen bg-[#021E3A] text-white flex items-center justify-center px-6 py-24 sm:py-28 cursor-default overflow-hidden">
       <motion.div
         aria-hidden
         className="pointer-events-none absolute -top-24 -left-24 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl"
@@ -76,7 +110,7 @@ const Contact = () => {
               <motion.button
                 type="button"
                 onClick={() => copyToClipboard(emailAddr, "email")}
-                className="group flex items-center justify-between rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 px-5 py-4 text-left backdrop-blur transition text-lg"
+                className="group flex items-center justify-between rounded-xl bg:white/5 bg-white/5 hover:bg-white/10 border border-white/10 px-5 py-4 text-left backdrop-blur transition text-lg"
                 variants={fadeUp}
                 custom={2}
               >
@@ -89,12 +123,13 @@ const Contact = () => {
                     <div className="font-semibold">{emailAddr}</div>
                   </div>
                 </div>
+                {copied.email ? <Check className="h-5 w-5 text-green-300" /> : <Copy className="h-5 w-5 opacity-80" />}
               </motion.button>
 
               <motion.button
                 type="button"
                 onClick={() => copyToClipboard(phoneNum, "phone")}
-                className="group flex items-center justify-between rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 px-5 py-4 text-left backdrop-blur transition text-lg"
+                className="group flex items-center justify-between rounded-xl bg:white/5 bg-white/5 hover:bg-white/10 border border-white/10 px-5 py-4 text-left backdrop-blur transition text-lg"
                 variants={fadeUp}
                 custom={3}
               >
@@ -107,6 +142,7 @@ const Contact = () => {
                     <div className="font-semibold">{phoneNum}</div>
                   </div>
                 </div>
+                {copied.phone ? <Check className="h-5 w-5 text-green-300" /> : <Copy className="h-5 w-5 opacity-80" />}
               </motion.button>
             </div>
 
@@ -167,18 +203,30 @@ const Contact = () => {
             </div>
 
             <div className="flex items-center justify-between gap-4 pt-3">
-              <AnimatePresence>
-                {sent && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 12 }}
-                    className="text-base text-green-300"
-                  >
-                    Your message has been sent. We'll get back to you soon!
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className="min-h-[24px]">
+                <AnimatePresence>
+                  {sent && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 12 }}
+                      className="text-base text-green-300"
+                    >
+                      🎉 Your message has been sent. We’ll get back to you soon. Stay tuned — we will launch soon!
+                    </motion.div>
+                  )}
+                  {error && !sent && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 12 }}
+                      className="text-base text-red-300"
+                    >
+                      {error}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               <motion.button
                 whileHover={{ scale: 1.03 }}
