@@ -14,6 +14,10 @@ import UltimatePackages from './Views/UltimatePackages'
 import Contact from './Views/Contact'
 import ScrollToTop from './Components/ScrollToTop'
 import AboutUs from './Views/AbouUs'
+import Disclaimer from './Views/Disclaimer'
+import PrivacyPolicy from './Views/PrivacyPolicy'
+import TermsAndConditions from './Views/TermsAndCondition'
+
 function App() {
   return (
     <Router> 
@@ -30,6 +34,9 @@ function App() {
         <Route path="/UltimatePackages" element={<><Header isDarkMode={true}/><UltimatePackages /></>} />
         <Route path="/AboutUs"element={<><Header /><AboutUs /></>} />
         <Route path="/Contact" element={<><Header /><Contact /></>} />
+        <Route path="/Disclaimer" element={<><Header isDarkMode={true} /><Disclaimer /></>} />
+        <Route path="/PrivacyPolicy" element={<><Header isDarkMode={true} /><PrivacyPolicy /></>} />
+        <Route path="/TermsAndConditions" element={<><Header isDarkMode={true}/><TermsAndConditions /></>} />
       </Routes>
     </Router>
   );

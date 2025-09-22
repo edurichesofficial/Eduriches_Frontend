@@ -38,12 +38,10 @@ const Contact = () => {
 
     const payload = {
       access_key: ACCESS_KEY,
-      // Use the same casing as your reference (Web3Forms accepts arbitrary fields)
       Name: form.name,
       Email: form.email,
       Message: form.message,
       Subject: "Digilancing – Contact Form",
-      // helpful extras (optional for Web3Forms)
       from_name: "Digilancing Website",
       replyto: form.email,
     };
@@ -59,7 +57,6 @@ const Contact = () => {
       if (result?.success) {
         setSent(true);
         setForm({ name: "", email: "", message: "" });
-        // auto-hide after a bit
         setTimeout(() => setSent(false), 3500);
       } else {
         setError(result?.message || "Failed to send message. Please try again.");

@@ -148,9 +148,9 @@ const Footer = () => {
               <h3 className="text-xl sm:text-2xl font-semibold mb-4">Policy</h3>
               <ul className="space-y-2">
                 {[
-                  { href: '/disclaimer', label: 'Disclaimer' },
-                  { href: '/terms', label: 'Terms and Conditions' },
-                  { href: '/privacy', label: 'Privacy Policy' },
+                  { href: '/Disclaimer', label: 'Disclaimer' },
+                  { href: '/TermsAndConditions', label: 'Terms and Conditions' },
+                  { href: '/PrivacyPolicy', label: 'Privacy Policy' },
                 ].map((l) => (
                   <motion.li key={l.href} whileHover={!prefersReduced ? { x: 4 } : {}}>
                     <a href={l.href} className="text-base sm:text-lg font-normal hover:text-gray-300 transition-colors">
@@ -170,8 +170,8 @@ const Footer = () => {
         >
           <p>&copy; 2025 DIGILANCING. All Rights Reserved.</p>
           <p className="flex items-center justify-center gap-2">
-            <a href="/terms" className="hover:text-gray-300 transition-colors">Terms and Conditions</a>|
-            <a href="/privacy" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
+            <a href="/TermsAndConditions" className="hover:text-gray-300 transition-colors">Terms and Conditions</a>|
+            <a href="/PrivacyPolicy" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
           </p>
           <p className="pt-5">Built with ❤️ by JV INFO TECH</p>
         </motion.div>
