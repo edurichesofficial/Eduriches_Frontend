@@ -173,7 +173,7 @@ const Footer = () => {
             <a href="/TermsAndConditions" className="hover:text-gray-300 transition-colors">Terms and Conditions</a>|
             <a href="/PrivacyPolicy" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
           </p>
-          <p className="pt-5">Built with ❤️ by JV INFO TECH</p>
+          <p className="pt-5">Built with ❤️ by iCubeVerse</p>
         </motion.div>
 
         {/* Bottom: Desktop */}
